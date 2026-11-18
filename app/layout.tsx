@@ -23,6 +23,9 @@ export const metadata: Metadata = {
 
 // Runs before first paint: pick the saved language, else Thai for Thai browsers. A Thai page stays hidden
 // until React has swapped the text in (or 1.2s pass, so a script failure never leaves it blank).
+// Google's site name above the result: without this it shows "GitHub" for a github.io address.
+const siteName = JSON.stringify({ "@context": "https://schema.org", "@type": "WebSite", name: "Octet", url: site });
+
 const pickLang = `try{var l=localStorage.getItem("lang")||(/^th\\b/i.test(navigator.language)?"th":"en");if(l==="th"){var d=document.documentElement;d.lang="th";d.dataset.pending="";setTimeout(function(){delete d.dataset.pending},1200)}}catch(e){}`;
 
 export default function RootLayout({ children }: { children: ReactNode }) {
@@ -30,6 +33,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="en" className={`${geist.variable} ${anuphan.variable}`} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: pickLang }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: siteName }} />
       </head>
       <body>{children}</body>
     </html>
